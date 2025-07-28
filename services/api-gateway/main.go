@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"ride-sharing/shared/env"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -13,11 +15,20 @@ var (
 
 func main() {
 	log.Println("Starting API Gateway")
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello from API Gateway"))
+	r := gin.Default()
+	
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Welcome to Ride Sharing API Gateway",
+		})
 	})
-
-	http.ListenAndServe(httpAddr, nil)
+	r.POST("/trip/preview",handleTripPreview)
+	server := &http.Server {
+		Addr: httpAddr,
+		Handler: r,
+	}
+ 
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatal("Error occured in gateway ",err)
+	}
 }
