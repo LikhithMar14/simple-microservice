@@ -48,6 +48,7 @@ export const useDriverStreamConnection = ({
       const message = JSON.parse(event.data) as ServerWsMessage;
 
       if (!message || !isValidWsMessage(message)) {
+        console.log(message)
         setError(`Unknown message type "${message}", allowed types are: ${Object.values(TripEvents).join(', ')}`);
         return;
       }
